@@ -1,0 +1,153 @@
+# -*- conf -*-
+
+Director {
+  Name = "<%= node['bacula']['director']['name'] %>"
+  QueryFile = "/etc/bacula/scripts/query.sql"
+  WorkingDirectory = "/var/lib/bacula"
+  PidDirectory = "/var/run/bacula"
+  Maximum Concurrent Jobs = 1
+  Password = "<%= node['bacula']['director']['password'] %>"
+  Messages = Daemon
+}
+
+### General
+
+Catalog {
+  Name = Main
+  DB Name = bacula
+  user = bacula
+  password = <%= node['bacula']['director']['db_password'] %>
+}
+
+Console {
+  Name = <%= node['bacula']['mon']['name'] %>
+  Password = "<%= node['bacula']['mon']['password'] %>"
+  CommandACL = status, .status
+}
+
+### Message destinations
+
+Messages {
+  Name = Standard
+  mailcommand = "/usr/lib/bacula/bsmtp -h localhost -f \"\(Bacula\) \<bacula@<%= node['fqdn'] %>\>\" -s \"Bacula: %t %e of %c %l\" %r"
+  operatorcommand = "/usr/lib/bacula/bsmtp -h localhost -f \"\(Bacula\) \< %r \>\" -s \"Bacula: Intervention needed for %j\" %r"
+  mail = <%=node['bacula']['director']['mailto']%> = all, !skipped
+  operator = <%=node['bacula']['director']['mailto']%> = mount
+  console = all, !skipped, !saved
+  append = "/var/lib/bacula/log" = all, !skipped
+  catalog = all
+}
+
+Messages {
+  Name = Daemon
+  mailcommand = "/usr/lib/bacula/bsmtp -h localhost -f \"\(Bacula\) \<bacula@<%= node['fqdn'] %>\>\" -s \"Bacula daemon message\" %r"
+  mail = <%= node['bacula']['director']['mailto'] %> = all, !skipped            
+  console = all, !skipped, !saved
+  append = "/var/lib/bacula/log" = all, !skipped
+}
+
+### Storages
+
+<% @storages.each do |storage| -%>
+Storage {
+  Name = <%= storage['bacula']['storage']['name'] %>
+  Address = <%= node.ip_for(storage) %>
+  Password = <%= storage['bacula']['storage']['password'] %>
+  Device = FileStorage
+  Media Type = File
+}
+
+<% end -%>
+
+### Pools
+
+Counter {
+  Name = MPL
+  Catalog = Main
+}
+
+Pool {
+  Name = Main
+  Pool Type = Backup
+  Storage = <%= @storages.first['bacula']['storage']['name'] rescue nil %>
+  Maximum Volume Jobs = 1
+  Maximum Volume Bytes = 3G
+  Label Format = "bacula.${MPL+:p/8/0/r}.${JobId}.${Client}.${JobName}.${Level}"
+}
+
+Pool {
+  Name = Scratch
+  Pool Type = Backup
+  Maximum Volume Jobs = 1
+  Maximum Volume Bytes = 3G
+  Label Format = "scratch."
+}
+
+### Jobs
+
+JobDefs {
+  Name = "DefaultJob"
+  Type = Backup
+  Level = Full
+  Pool = Main
+  Messages = Standard
+  Priority = 10
+  Write Bootstrap = "/var/lib/bacula/%c.bsr"
+}
+
+### Schedules
+
+Schedule {
+  Name = "DailyFull"
+  Run = Level=Full daily at 12:00
+}
+
+### Only default Job is to backup the catalog itself.
+
+FileSet {
+  Name = "Catalog"
+  Include {
+    Options {
+      signature = MD5
+    }
+    File = "/var/lib/bacula/"
+    File = "/etc/bacula/"
+  }
+}
+
+Job {
+  Client = <%= node['bacula']['fd']['name'] %>
+  Name = "BackupCatalog"
+  JobDefs = "DefaultJob"
+  Level = Full
+  FileSet="Catalog"
+  RunBeforeJob = "/etc/bacula/scripts/make_catalog_backup.pl Main"
+  RunAfterJob  = "/etc/bacula/scripts/delete_catalog_backup"
+  Write Bootstrap = "/var/lib/bacula/%n.bsr"
+  Schedule = "DailyFull"
+  Priority = 11                   # run after main backup
+}
+
+Job {
+  Name = "RestoreFiles"
+  Type = Restore
+  Client = <%= node['bacula']['fd']['name'] %>
+  FileSet = "Catalog" # FIXME: "Full Set"
+  Pool = Main
+  Messages = Standard
+  Where = /srv/bacula/restores
+}
+
+### Clients
+
+<% @clients.each do |client| -%>
+Client {
+  Name = <%= client['bacula']['fd']['name'] %>
+  Address = <%= node.ip_for(client) %>
+  Catalog = Main
+  Password = <%= client['bacula']['fd']['password'] %>
+}
+
+<% end -%>
+
+@|"perl -e 'print \"\\@$_\\n\" for </etc/bacula/bacula-dir.d/*.conf>;'"

@@ -1,0 +1,38 @@
+# -*- conf -*-
+
+Storage {
+  Name = <%= node['bacula']['storage']['name'] %>
+  WorkingDirectory = "/var/lib/bacula"
+  Pid Directory = "/var/run/bacula"
+  Maximum Concurrent Jobs = <%= node['bacula']['storage']['maximum_concurrent_jobs'] %>
+}
+
+<% @directors.each do |director| -%>
+
+Director {
+  Name = <%= director['bacula']['director']['name'] %>
+  Password = <%= node['bacula']['storage']['password'] %>
+}
+<% end -%>
+
+Director {
+  Name = <%= node['bacula']['mon']['name'] %>
+  Password = "<%= node['bacula']['mon']['password'] %>"
+  Monitor = yes
+}
+
+Device {
+  Name = FileStorage
+  Media Type = File
+  Archive Device = <%= node['bacula']['storage']['directory'] %>
+  LabelMedia = yes;
+  Random Access = Yes;
+  AutomaticMount = yes;
+  RemovableMedia = no;
+  AlwaysOpen = yes;
+}
+
+Messages {
+  Name = Standard
+  director = <%= @directors.first['bacula']['director']['name'] %> = all
+}

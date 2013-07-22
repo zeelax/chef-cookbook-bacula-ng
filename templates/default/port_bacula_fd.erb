@@ -1,0 +1,4 @@
+-A FWR -p tcp -m tcp --dport 9102 --src 127.0.0.1 -j ACCEPT
+<% @allowed_ips.each do |ip| -%>
+-A FWR -p tcp -m tcp --dport 9102 --src <%= ip %> -j ACCEPT
+<% end -%>

@@ -1,0 +1,21 @@
+# -*- conf -*-
+
+FileDaemon {
+  Name = <%= node['bacula']['fd']['name'] %>
+  WorkingDirectory = "/var/lib/bacula"
+  PidDirectory = "/var/run/bacula"
+  Maximum Concurrent Jobs = 20
+}
+
+<% @directors.each do |director| -%>
+
+Director {
+  Name = <%= director['bacula']['director']['name'] %>
+  Password = <%= node['bacula']['fd']['password'] %>
+}
+<% end -%>
+
+Messages {
+  Name = Standard
+  director = <%= @directors.first['bacula']['director']['name'] %> = all, !skipped, !restored
+}

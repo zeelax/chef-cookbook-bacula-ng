@@ -1,0 +1,7 @@
+# -*- conf -*-
+
+Director {
+  Name = <%= node['bacula']['director']['name'] %>
+  Address = localhost
+  Password =  "<%= node['bacula']['director']['password'] %>"
+}
