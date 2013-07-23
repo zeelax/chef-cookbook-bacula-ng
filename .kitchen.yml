@@ -26,7 +26,7 @@ suites:
           password: swordfish
         mon:
           password: swordfish
-  - name: server
+  - name: server-postgresql
     run_list:
       - recipe[apt]
       - recipe[chef-solo-search]
@@ -34,6 +34,7 @@ suites:
       - recipe[bacula-ng::server]
     attributes:
       bacula:
+        database: postgresql
         director:
           db_password: swordfish
           password: swordfish
@@ -46,3 +47,25 @@ suites:
       postgresql:
         password:
           postgres: swordfish
+  - name: server-mysql
+    run_list:
+      - recipe[apt]
+      - recipe[chef-solo-search]
+      - recipe[bacula-ng-test::iptables]
+      - recipe[bacula-ng::server]
+    attributes:
+      bacula:
+        database: mysql
+        director:
+          db_password: swordfish
+          password: swordfish
+        fd:
+          password: swordfish
+        mon:
+          password: swordfish
+        storage:
+          password: swordfish
+      mysql:
+        server_debian_password: swordfish
+        server_repl_password: swordfish
+        server_root_password: swordfish
