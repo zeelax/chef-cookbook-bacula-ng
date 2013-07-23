@@ -1,6 +1,10 @@
+---
 bundler_args: --without integration
 before_script: bundle exec berks install
 script: bundle exec strainer test
 language: ruby
 rvm:
-  - 1.9.3
+- 1.9.3
+notifications:
+  hipchat:
+    secure: jpNH4hLOwoAMMBhvncdcJkT6zJNCMYaYNw2Dm3GIGxKtPxhvCdqiOrgvJJRO3mJivmblKoGjK5tXeUx0F3WWK6apJJJpS/mZ8Y0EzOZpTDHLN6ZYUWgjMzLEoMW6LVOUB9IgeyJzWCPJQ50iWANCz3eBz1Mpd6d+kO+QnqJyWwc=
