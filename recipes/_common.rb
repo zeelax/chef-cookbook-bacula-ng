@@ -1,3 +1,5 @@
+include_recipe 'chef-solo-search' if Chef::Config[:solo]
+
 chef_gem 'chef-helpers' do
   version '~> 0.0.7'
 end

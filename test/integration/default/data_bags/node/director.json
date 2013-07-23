@@ -1,11 +1,11 @@
 {
    "bacula" : {
       "director" : {
-         "name": "director@director",
+         "name": "stub:director",
          "password" : "swordfish"
       }
    },
-   "id" : "director",
+   "id" : "stub",
    "ipaddress" : "1.1.1.1",
    "tags": [ "bacula_director" ]
 }

@@ -10,4 +10,4 @@ default['bacula']['mon']['name'] = "#{name}:mon"
 default['bacula']['director']['name'] = "#{name}:director"
 default['bacula']['director']['mailto'] = 'root@localhost'
 
-default['bacula']['fd']['name'] = "#{name}"
+default['bacula']['fd']['name'] = node.name
