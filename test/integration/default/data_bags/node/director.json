@@ -1,0 +1,11 @@
+{
+   "bacula" : {
+      "director" : {
+         "name": "director@director",
+         "password" : "swordfish"
+      }
+   },
+   "id" : "director",
+   "ipaddress" : "1.1.1.1",
+   "tags": [ "bacula_director" ]
+}
