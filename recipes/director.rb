@@ -29,7 +29,8 @@ when 'postgresql'
   postgresql_database 'bacula' do
     connection db_connection
     owner 'bacula'
-    encoding 'UTF8'
+    encoding 'SQL_ASCII'
+    template 'template0'
     action :create
   end
 

@@ -1,12 +1,12 @@
 # -*- conf -*-
 
 Director {
-  Name = "<%= node['bacula']['director']['name'] %>"
+  Name = <%= node['bacula']['director']['name'] %>
   QueryFile = "/etc/bacula/scripts/query.sql"
   WorkingDirectory = "/var/lib/bacula"
   PidDirectory = "/var/run/bacula"
   Maximum Concurrent Jobs = 1
-  Password = "<%= node['bacula']['director']['password'] %>"
+  Password = <%= node['bacula']['director']['password'] %>
   Messages = Daemon
 }
 

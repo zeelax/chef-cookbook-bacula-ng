@@ -23,7 +23,7 @@ template '/etc/bacula/bacula-fd.conf' do
   group 'bacula'
   mode '0640'
   variables :directors => directors
-  notifies :reload, "service[bacula-fd]"
+  notifies :restart, "service[bacula-fd]"
 end
 
 tag('bacula_client')

@@ -30,7 +30,7 @@ template '/etc/bacula/bacula-sd.conf' do
   group 'bacula'
   mode '0640'
   variables :directors => directors
-  notifies :reload, "service[bacula-sd]"
+  notifies :restart, "service[bacula-sd]"
 end
 
 if node['bacula']['use_iptables']
