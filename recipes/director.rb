@@ -61,14 +61,18 @@ when 'mysql'
     connection db_connection
     password node['bacula']['director']['db_password']
     database_name 'bacula'
+    host 'localhost'
     action [:create, :grant]
   end
 
   mysql_database 'bacula::schema' do
-    connection db_connection
+    connection host: 'localhost',
+               username: 'bacula',
+               password: node['bacula']['director']['db_password']
     database_name 'bacula'
     sql { ::File.read('/usr/share/dbconfig-common/data/bacula-director-mysql/install/mysql') }
     not_if { File.exist?("#{node['mysql']['data_dir']}/bacula/Version.frm") }
+    action :query
   end
 else
   raise "Supported databases are 'postgresql' or 'mysql', not #{node['bacula']['database'].inspect}"
