@@ -1,0 +1,50 @@
+FileSet {
+  Name = "<%= @job['id'] %>"
+  Include {
+    Options {
+      signature = SHA1
+      compression = GZIP
+    }
+<% Array(@job['files']).each do |file| -%>
+    File = "<%= file %>"
+<% end -%>
+  }
+}
+
+JobDefs {
+  Name = "<%= @job['id'] %>"
+  Type = Backup
+  Level = Full
+  Pool = Main
+  Messages = Standard
+  Priority = 10
+  FileSet = "<%= @job['id'] %>"
+  Schedule = "DailyFull"
+<% Array(@job['backup_settings']).sort.each do |setting, value| -%>
+  <%= setting %> = "<%= value %>"
+<% end -%>
+}
+
+<% if @job['restore_settings'] && !@job['restore_settings'].empty? -%>
+Job {
+  Name = "restore:<%= @job['id'] %>"
+  Type = Restore
+  Client = "<%= node['bacula']['fd']['name'] %>"
+  FileSet = "<%= @job['id'] %>"
+  Pool = Main
+  Messages = Standard
+  Where = <%= node['bacula']['restore_dir'] %>
+<% Array(@job['restore_settings']).sort.each do |setting, value| -%>
+  <%= setting %> = "<%= value %>"
+<% end -%>
+}
+
+<% end -%>
+<% @clients.each do |client| -%>
+
+Job {
+  Client = "<%= client['bacula']['fd']['name'] %>"
+  Name = "<%= client.name %>:<%= @job['id'] %>"
+  JobDefs = "<%= @job['id'] %>"
+}
+<% end -%>

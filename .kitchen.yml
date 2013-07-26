@@ -34,6 +34,8 @@ suites:
       - recipe[bacula-ng::server]
     attributes:
       bacula:
+        client:
+          backup: test_job
         database: postgresql
         director:
           db_password: swordfish

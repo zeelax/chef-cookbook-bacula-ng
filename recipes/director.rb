@@ -78,14 +78,6 @@ else
   raise "Supported databases are 'postgresql' or 'mysql', not #{node['bacula']['database'].inspect}"
 end
 
-package 'bacula-console'
-
-template '/etc/bacula/bconsole.conf' do
-  owner 'root'
-  group 'bacula'
-  mode '0640'
-end
-
 directory '/etc/bacula/bacula-dir.d' do
   owner 'root'
   group 'bacula'
@@ -105,7 +97,43 @@ template '/etc/bacula/bacula-dir.conf' do
   notifies :restart, 'service[bacula-director]'
 end
 
+search('bacula_jobs', '*:*').each do |job|
+  config = job['director_config'] || 'bacula-ng::bacula-dir-job.conf.erb'
+  cfg_cookbook, cfg_template = config.split('::')
+
+  clients = search(:node, "bacula_client_backup:#{job['id']}")
+  clients << node if !clients.map(&:name).include?(node.name)
+  clients.sort_by!(&:name)
+
+  template "/etc/bacula/bacula-dir.d/job-#{job['id']}.conf" do
+    source cfg_template
+    cookbook cfg_cookbook
+    owner 'root'
+    group 'bacula'
+    mode '0640'
+    variables job: job,
+              clients: clients
+    notifies :restart, 'service[bacula-director]'
+  end
+end
+
 tag 'bacula_director'
+
+package 'bacula-console'
+
+template '/etc/bacula/bconsole.conf' do
+  owner 'root'
+  group 'bacula'
+  mode '0640'
+end
+
+package 'expect'
+
+cookbook_file '/etc/bacula/scripts/restore' do
+  owner 'root'
+  group 'root'
+  mode '0755'
+end
 
 if node['bacula']['use_iptables']
   include_recipe 'iptables'

@@ -1,0 +1,16 @@
+#!/usr/bin/expect -f
+# -*- tcl -*-
+
+set restorejob  [lindex $argv 0]
+set restoreargs [lrange $argv 1 end]
+
+spawn bconsole
+expect "\\*"
+send "restore $restoreargs select all done yes\r"
+expect {
+    -re " (\[1-9]\[0-9]*): $restorejob" { set rjid $expect_out(1,string) }
+    "Select Restore Job (*): "          { send "$rjid\r" }
+    "\\*"                               { send eof }
+}
+close
+send_user "\n"

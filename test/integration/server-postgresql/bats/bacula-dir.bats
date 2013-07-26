@@ -32,10 +32,10 @@ load helpers/test_helper
 }
 
 @test "can back up and restore" {
-    echo "run job=BackupCatalog client=$MYHOSTNAME yes" | bconsole > /tmp/enqueue.log
-    awk '/^Job queued./ { split($3, a, "="); print a[2]; }' < /tmp/enqueue.log > /tmp/jobid
+    rm -rf /srv/bacula/restore
+    echo "run job=BackupCatalog client=$MYHOSTNAME yes" | bconsole
     sleep 10                    # FIXME: actually wait
-    echo "restore jobid=`cat /tmp/jobid` client=$MYHOSTNAME done select all yes" | bconsole
+    /etc/bacula/scripts/restore RestoreFiles fileset=Catalog client=$MYHOSTNAME current select all yes
     sleep 10                    # FIXME: actually wait
-    [ -f /srv/bacula/restores/var/lib/bacula/bacula.sql ]
+    [ -f /srv/bacula/restore/var/lib/bacula/bacula.sql ]
 }

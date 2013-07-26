@@ -132,10 +132,10 @@ Job {
   Name = "RestoreFiles"
   Type = Restore
   Client = <%= node['bacula']['fd']['name'] %>
-  FileSet = "Catalog" # FIXME: "Full Set"
+  FileSet = "Catalog" # Doesn't matter
   Pool = Main
   Messages = Standard
-  Where = /srv/bacula/restores
+  Where = <%= node['bacula']['restore_dir'] %>
 }
 
 ### Clients

@@ -1,0 +1,7 @@
+{
+    "id": "test_job",
+    "backup_settings": {
+        "Client Run Before Job": "openssl rand -out /tmp/RANDOM -hex 64"
+    },
+    "files": [ "/tmp/RANDOM" ]
+}

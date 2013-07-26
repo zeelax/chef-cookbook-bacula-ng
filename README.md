@@ -53,6 +53,55 @@ can think of anything better, the procedure is:
 If you run chef-solo, chef-solo-search will help you configure it all
 in a single pass.
 
+### Jobs
+
+Default configuration only includes two jobs: `BackupCatalog` to
+backup the Bacula's catalog data, and `RestoreFiles` to restore backed
+up files to the directory. It's up to user to add more specific jobs,
+tailored for their environment. The jobs are defined in `bacula_jobs`
+data bag. The data bag should contain following fields:
+
+ - `id` -- obligatory data bag item ID
+ - `name` -- if present, passed to the director config template as
+   a pretty job name
+ - `director_config` -- cookbook-qualified name of template with director's
+   config snippet; defaults to `bacula-ng::bacula-dir-job.conf.erb`
+ - `director_scripts` -- array of cookbook-qualified names of cookbook
+   files with scripts to upload to director's
+   `/etc/bacula/scripts/_id_/`; defaults to `[]`
+ - `director_recipes` -- recipes to add to director's run list
+ - `backup_scripts` -- array of cookbook-qualified names of cookbook
+   files with scripts to upload to backup client's
+   `/etc/bacula/scripts/_id_/`; defaults to `[]`
+ - `backup_recipes` -- recipes to add to backup client's run list
+ - `restore_scripts` -- array of cookbook-qualified names of cookbook
+    files with scripts to upload to restore client's
+    `/etc/bacula/scripts/_id_/`; defaults to `[]`
+ - `restore_recipes` -- recipes to add to restore client's run list
+
+The default `director_config` template will understand these
+additional fields:
+
+ - `files` -- array of files to add to fileset
+ - `backup_settings` -- dictionary of settings pasted into backup
+   job's `JobDefs` entry
+ - `restore_settings` -- dictionary of settings pasted into restore
+   job's entry
+
+The director will include `director_config`, `director_scripts`, and
+`director_recipes` for all defined jobs. Clients need to have the job
+defined in `bacula.client.backup` or `bacula.client.restore`
+attributes.
+
+The `director_config` template will receive following variables:
+
+ - `@job` -- the data bag itself
+ - `@clients` -- array of nodes that have the job listed in their
+   `bacula.client.backup` attribute
+
+Please see the [templates/default/bacula-dir-job.conf.erb](default
+bacula-dir-job.conf.erb) template for inspiration.
+
 Attributes
 ----------
 
@@ -60,6 +109,10 @@ Attributes
  - `bacula.use_iptables` -- if true (default), set up iptables rules
    to limit access to Bacula's ports
  - `bacula.storage.directory` -- directory to store backup tapes
+ - `bacula.client.backup` -- array of backup jobs this client will
+   need to run
+ - `bacula.client.restore` -- array of restore jobs this client will
+   run.
 
 Recipes
 -------
