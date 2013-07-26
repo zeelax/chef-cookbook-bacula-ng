@@ -84,10 +84,27 @@ directory '/etc/bacula/bacula-dir.d' do
   mode '0750'
 end
 
-storages = search(:node, 'tags:bacula_storage').sort_by(&:name)
-clients = search(:node, 'tags:bacula_client').sort_by(&:name)
-storages << node if tagged?('bacula_storage') && !storages.map(&:name).include?(node.name)
-clients << node if !clients.map(&:name).include?(node.name)
+if Chef::DataBag.list.include?('bacula_unmanagedhosts')
+  unmanagedhosts = search(:bacula_unmanagedhosts, '*:*')
+  unmanagedhosts.each do |uh|
+    uh['bacula'] ||= {}
+    uh['bacula']['fd'] ||= {}
+    uh['bacula']['fd']['name'] ||= uh['id']
+  end
+else
+  unmanagedhosts = []
+end
+
+_name = lambda { |sth| sth.respond_to?(:name) ? sth.name : sth['id'] }
+
+storages = search(:node, 'tags:bacula_storage')
+storages << node if tagged?('bacula_storage') && !storages.map(&_name).include?(node.name)
+storages.sort_by!(&_name)
+
+clients = search(:node, 'tags:bacula_client')
+clients.concat unmanagedhosts
+clients << node if !clients.map(&_name).include?(node.name)
+clients.sort_by!(&_name)
 
 template '/etc/bacula/bacula-dir.conf' do
   owner 'root'
@@ -102,8 +119,11 @@ search('bacula_jobs', '*:*').each do |job|
   cfg_cookbook, cfg_template = config.split('::')
 
   clients = search(:node, "bacula_client_backup:#{job['id']}")
-  clients << node if !clients.map(&:name).include?(node.name)
-  clients.sort_by!(&:name)
+  clients << node if !clients.map(&_name).include?(node.name)
+  unmanagedhosts.
+    select { |uh| Array(uh['bacula']['client']['backup']).include?(job['id']) }.
+    each { |uh| clients << uh }
+  clients.sort_by!(&_name)
 
   template "/etc/bacula/bacula-dir.d/job-#{job['id']}.conf" do
     source cfg_template
@@ -141,5 +161,3 @@ if node['bacula']['use_iptables']
     variables :allowed_ips => storages.map { |n| node.ip_for(n) }.compact.uniq
   end
 end
-
-log "FIXME: custom jobs"

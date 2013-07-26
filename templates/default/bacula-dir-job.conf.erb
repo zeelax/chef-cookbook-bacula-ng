@@ -44,7 +44,7 @@ Job {
 
 Job {
   Client = "<%= client['bacula']['fd']['name'] %>"
-  Name = "<%= client.name %>:<%= @job['id'] %>"
+  Name = "<%= client['bacula']['fd']['name'] %>:<%= @job['id'] %>"
   JobDefs = "<%= @job['id'] %>"
 }
 <% end -%>

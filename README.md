@@ -102,6 +102,23 @@ The `director_config` template will receive following variables:
 Please see the [templates/default/bacula-dir-job.conf.erb](default
 bacula-dir-job.conf.erb) template for inspiration.
 
+### Unmanaged Hosts
+
+If you need to back up clients not managed by Chef, create a
+`bacula_unmanagedhosts` data bag:
+
+```json
+{
+  "id": "a-legacy-host",
+  "bacula": {
+    "fd": {
+      "password": "WHATEVER"
+    }
+  },
+  "ipaddress": "1.2.3.4"
+}
+```
+
 Attributes
 ----------
 

@@ -1,0 +1,8 @@
+{
+  "id": "legacy",
+  "bacula": { 
+    "client": { "backup": [ "test_job" ] },
+    "fd": { "password": "WHATEVER" }
+  },
+  "ipaddress": "1.2.3.4"
+}

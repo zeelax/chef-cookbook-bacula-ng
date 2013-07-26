@@ -14,9 +14,9 @@ load helpers/test_helper
     [ "`get_bacula_config bacula-dir.conf Storage Password`" = 'swordfish' ]
     [ "`get_bacula_config bacula-dir.conf Storage Address`" = "$MYIP" ]
 
-    [ "`get_bacula_config bacula-dir.conf Client Name`" = "$MYHOSTNAME" ]
-    [ "`get_bacula_config bacula-dir.conf Client Password`" = 'swordfish' ]
-    [ "`get_bacula_config bacula-dir.conf Client Address`" = "$MYIP" ]
+    get_bacula_config bacula-dir.conf Client Name | grep "$MYHOSTNAME"
+    get_bacula_config bacula-dir.conf Client Password | grep 'swordfish'
+    get_bacula_config bacula-dir.conf Client Address | grep "$MYIP"
 }
 
 @test "director lets self in on the firewall" {

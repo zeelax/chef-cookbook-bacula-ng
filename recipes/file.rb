@@ -16,8 +16,6 @@ directors.sort_by!(&:name)
 package 'bacula-fd'
 service 'bacula-fd'
 
-log "directors: #{directors.inspect}"
-
 template '/etc/bacula/bacula-fd.conf' do
   owner 'root'
   group 'bacula'
@@ -34,5 +32,3 @@ if node['bacula']['use_iptables']
     variables :allowed_ips => allowed_ips
   end
 end
-
-log "FIXME: custom modules"
