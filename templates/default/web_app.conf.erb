@@ -1,0 +1,29 @@
+<VirtualHost *:80>
+  ServerAdmin     <%= node['apache']['contact'] %>
+  ServerName      <%= node['bacula']['web']['domain'] %>
+  DocumentRoot    /srv/bacula-web
+  CustomLog       /var/log/apache2/bacula-web_access.log combined
+  ErrorLog        /var/log/apache2/bacula-web_error.log
+
+<% if !!node['bacula']['web']['ssl_key_path'] -%>
+  RewriteEngine on
+  RewriteRule ^/?(.*)$ https://<%= node['bacula']['web']['domain'] %>/$1 [L,R=301]
+</VirtualHost>
+
+<VirtualHost *:443>
+  ServerAdmin     <%= node['apache']['contact'] %>
+  ServerName      <%= node['bacula']['web']['domain'] %>
+  DocumentRoot    /srv/bacula-web
+  CustomLog       /var/log/apache2/bacula-web_access.log combined
+  ErrorLog        /var/log/apache2/bacula-web_error.log
+
+  SSLEngine on
+  SSLCertificateFile <%= node['bacula']['web']['ssl_cert_path'] %>
+  SSLCertificateKeyFile <%= node['bacula']['web']['ssl_key_path'] %>
+
+<% end -%>
+
+  RewriteEngine On
+  RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /.*index\.html\ HTTP/
+  RewriteRule ^(.*)index\.html$ $1 [R=301,L]
+</VirtualHost>

@@ -1,4 +1,8 @@
 name 'bacula-ng-test'
 description 'Integration tests for bacula-ng'
-depends "bacula-ng"
-depends "iptables"
+
+depends 'apt'
+depends 'chef-solo-search'
+depends 'iptables'
+
+depends 'bacula-ng'

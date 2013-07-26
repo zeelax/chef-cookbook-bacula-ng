@@ -1,2 +1,0 @@
-include_recipe 'iptables'
-iptables_rule 'ports_sane'
