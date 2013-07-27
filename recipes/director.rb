@@ -37,6 +37,7 @@ when 'postgresql'
 
   postgresql_database 'bacula::schema' do
     connection host: 'localhost',
+               port: node['postgresql']['config']['port'],
                username: 'bacula',
                password: node['bacula']['director']['db_password']
     database_name 'bacula'
