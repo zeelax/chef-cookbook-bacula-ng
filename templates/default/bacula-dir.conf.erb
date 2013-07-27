@@ -17,6 +17,10 @@ Catalog {
   DB Name = bacula
   user = bacula
   password = <%= node['bacula']['director']['db_password'] %>
+<% if node['bacula']['database'] == 'postgresql' -%>
+   DB Address = localhost
+   DB Port = <%= node["postgresql"]["config"]["port"] %>
+<% end -%>
 }
 
 Console {
