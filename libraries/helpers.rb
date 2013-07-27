@@ -10,6 +10,7 @@ module BaculaNG
       db.close
 
       db = ::PGconn.new host: 'localhost',
+                        port: node['postgresql']['config']['port'],
                         user: 'postgres',
                         password: node['postgresql']['password']['postgres'],
                         dbname: dbname
