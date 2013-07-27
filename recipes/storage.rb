@@ -7,6 +7,7 @@ directory node['bacula']['storage']['directory'] do
   owner 'bacula'
   group 'bacula'
   mode '0700'
+  recursive true
 end
 
 directors = search(:node, 'tags:bacula_director')
