@@ -16,7 +16,7 @@ default['bacula']['fd']['name'] = node.name
 default['bacula']['client']['backup'] = []
 default['bacula']['client']['restore'] = []
 
-default['bacula']['web']['domain'] = fqdn
+default['bacula']['web']['domain'] = node['fqdn']
 default['bacula']['web']['version'] = '5.2.13-1'
 default['bacula']['web']['download_url'] = 'http://www.bacula-web.org/tl_files/downloads/'
 default['bacula']['web']['download_checksum'] = 'c9787c1999a87af4086b296fc0d2edba9f65d16cf9b4a90a818d109d2e76844f'
