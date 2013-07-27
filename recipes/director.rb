@@ -80,6 +80,8 @@ else
   raise "Supported databases are 'postgresql' or 'mysql', not #{node['bacula']['database'].inspect}"
 end
 
+include_recipe 'bacula-ng::client'
+
 directory '/etc/bacula/bacula-dir.d' do
   owner 'root'
   group 'bacula'
