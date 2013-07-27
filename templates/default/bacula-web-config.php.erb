@@ -32,6 +32,6 @@ $config[0]['db_type'] = 'mysql';
 $config[0]['db_port'] = '3306';
 <% elsif node['bacula']['database'] == 'postgresql' -%>
 $config[0]['db_type'] = 'pgsql';
-$config[0]['db_port'] = '5432'; 
+$config[0]['db_port'] = '<%= node["postgresql"]["config"]["port"] %>'; 
 <% end -%>
 ?>
