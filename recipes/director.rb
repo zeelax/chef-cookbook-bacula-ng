@@ -16,6 +16,7 @@ when 'postgresql'
   include_recipe "postgresql::server"
 
   db_connection = { host: 'localhost',
+                    port: node['postgresql']['config']['port'],
                     username: 'postgres',
                     password: node['postgresql']['password']['postgres'] }
 
