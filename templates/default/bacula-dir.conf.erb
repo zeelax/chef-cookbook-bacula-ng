@@ -124,7 +124,7 @@ FileSet {
 
 Job {
   Client = <%= node['bacula']['fd']['name'] %>
-  Name = "BackupCatalog"
+  Name = "catalog"
   JobDefs = "DefaultJob"
   Level = Full
   FileSet="Catalog"
@@ -136,7 +136,7 @@ Job {
 }
 
 Job {
-  Name = "RestoreFiles"
+  Name = "restore:files"
   Type = Restore
   Client = <%= node['bacula']['fd']['name'] %>
   FileSet = "Catalog" # Doesn't matter
