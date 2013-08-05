@@ -4,6 +4,9 @@ FileSet {
     Options {
       signature = SHA1
       compression = GZIP
+<% if @job['strippath'] -%>
+      strippath = <%= @job['strippath'] %>
+<% end -%>
     }
 <% Array(@job['files']).each do |file| -%>
     File = "<%= file %>"
@@ -17,9 +20,9 @@ JobDefs {
   Level = Full
   Pool = Main
   Messages = Standard
-  Priority = 10
+  Priority = <%= @job['priority'] || 10 %>
   FileSet = "<%= @job['id'] %>"
-  Schedule = "DailyFull"
+  Schedule = "<%= @job['schedule'] || 'DailyFull' %>"
 <% Array(@job['backup_settings']).sort.each do |setting, value| -%>
   <%= setting %> = "<%= value %>"
 <% end -%>

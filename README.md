@@ -87,6 +87,8 @@ additional fields:
    job's `JobDefs` entry
  - `restore_settings` -- dictionary of settings pasted into restore
    job's entry
+ - `priority` -- job's priority (default is 10)
+ - `strippath` -- add `strippath` value to FileSet's `Options` section.
 
 The director will include `director_config`, `director_scripts`, and
 `director_recipes` for all defined jobs. Clients need to have the job
