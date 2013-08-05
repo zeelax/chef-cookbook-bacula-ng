@@ -24,6 +24,37 @@ template '/etc/bacula/bacula-fd.conf' do
   notifies :restart, "service[bacula-fd]"
 end
 
+# FIXME:DRY
+node['bacula']['client']['backup'].map { |job_id| data_bag_item('bacula_jobs', job_id) }.each do |job|
+  scripts = Array(job['backup_scripts'])
+  directory "/etc/bacula/scripts/#{job['id']}" do
+    not_if { scripts.empty? }
+  end
+  scripts.each do |script|
+    script_cookbook, script_file = script.split('::')
+    cookbook_file "/etc/bacula/scripts/#{job['id']}/#{script_file}" do
+      mode '0500'
+      cookbook script_cookbook
+      source script_file
+    end
+  end
+end
+
+node['bacula']['client']['restore'].map { |job_id| data_bag_item('bacula_jobs', job_id) }.each do |job|
+  scripts = Array(job['restore_scripts'])
+  directory "/etc/bacula/scripts/#{job['id']}" do
+    not_if { scripts.empty? }
+  end
+  scripts.each do |script|
+    script_cookbook, script_file = script.split('::')
+    cookbook_file "/etc/bacula/scripts/#{job['id']}/#{script_file}" do
+      mode '0500'
+      cookbook script_cookbook
+      source script_file
+    end
+  end
+end
+
 tag('bacula_client')
 
 if node['bacula']['use_iptables']
