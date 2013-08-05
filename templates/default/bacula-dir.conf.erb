@@ -77,6 +77,9 @@ Pool {
   Maximum Volume Jobs = 1
   Maximum Volume Bytes = 3G
   Label Format = "bacula.${MPL+:p/8/0/r}.${JobId}.${Client}.${JobName}.${Level}"
+  Recycle = no
+  AutoPrune = no
+  Volume Retention = <%= node['bacula']['director']['volume_retention'] %>
 }
 
 Pool {
@@ -150,6 +153,8 @@ Client {
   Address = <%= node.ip_for(client) %>
   Catalog = Main
   Password = <%= client['bacula']['fd']['password'] %>
+  File Retention = <%= client['bacula']['client']['file_retention'] %>
+  Job Retention = <%= client['bacula']['client']['job_retention'] %>
 }
 
 <% end -%>

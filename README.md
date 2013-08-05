@@ -125,13 +125,13 @@ Attributes
 ----------
 
  - `bacula.database` -- `"postgresql"` (default) or `"mysql"`
- - `bacula.use_iptables` -- if true (default), set up iptables rules
-   to limit access to Bacula's ports
+ - `bacula.use_iptables` -- if true (default), set up iptables rules to limit access to Bacula's ports
+ - `bacula.client.backup` -- array of backup jobs this client will need to run
+ - `bacula.client.file_retention` -- `File Retention` value for the client; default: `1 year`
+ - `bacula.client.job_retention` -- `File Retention` value for the client; default: `1000 years`
+ - `bacula.client.restore` -- array of restore jobs this client will run.
+ - `bacula.director.volume_retention` -- `Volume Retention` for the main Pool; default: `1000 years`
  - `bacula.storage.directory` -- directory to store backup tapes
- - `bacula.client.backup` -- array of backup jobs this client will
-   need to run
- - `bacula.client.restore` -- array of restore jobs this client will
-   run.
 
 Recipes
 -------
