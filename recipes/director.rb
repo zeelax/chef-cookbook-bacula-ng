@@ -162,6 +162,6 @@ end
 if node['bacula']['use_iptables']
   include_recipe 'iptables'
   iptables_rule 'port_bacula_dir' do
-    variables :allowed_ips => storages.map { |n| node.ip_for(n) }.compact.uniq
+    variables :allowed_ips => storages.map { |n| node.ip_for(n) }.compact.uniq.sort
   end
 end
