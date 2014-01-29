@@ -12,6 +12,13 @@ FileSet {
     File = "<%= file %>"
 <% end -%>
   }
+<% if @job['exclude_files'] -%>
+  Exclude {
+<% Array(@job['exclude_files']).each do |file| -%>
+    File = "<%= file %>"
+<% end -%>
+  }
+<% end -%>
 }
 
 JobDefs {
