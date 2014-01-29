@@ -151,7 +151,9 @@ Job {
 Client {
   Name = <%= client['bacula']['fd']['name'] %>
   Address = <%= node.ip_for(client) %>
-  Catalog = Main
+<% if client['bacula']['fd']['port'] -%>
+  FD Port = <%= client['bacula']['fd']['port'] %>
+<% end -%>  Catalog = Main
   Password = <%= client['bacula']['fd']['password'] %>
   File Retention = <%= client['bacula']['client']['file_retention'] %>
   Job Retention = <%= client['bacula']['client']['job_retention'] %>

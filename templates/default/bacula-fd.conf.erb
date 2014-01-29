@@ -5,6 +5,9 @@ FileDaemon {
   WorkingDirectory = "/var/lib/bacula"
   PidDirectory = "/var/run/bacula"
   Maximum Concurrent Jobs = 20
+<% if node['bacula']['fd']['port'] -%>
+  FD Port = <%= node['bacula']['fd']['port'] %>
+<% end -%>
 }
 
 <% @directors.each do |director| -%>
