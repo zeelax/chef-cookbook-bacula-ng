@@ -3,7 +3,7 @@ bacula-ng cookbook
 
 This cookbook configures [Bacula](http://www.bacula.org/) backup system.
 
-This cookbook's home is at https://github.com/3ofcoins/bacula-ng/
+This cookbook's home is at https://github.com/3ofcoins/chef-cookbook-bacula-ng/
 
 Requirements
 ------------
@@ -146,4 +146,4 @@ Recipes
 Author
 ------
 
-Author:: Maciej Pasternacki <maciej@3ofcoins.net>
+Author: Maciej Pasternacki <maciej@3ofcoins.net>
