@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 include_recipe 'bacula-ng::_common'
 
 solo_require_attributes 'bacula.director.password',
@@ -12,14 +14,13 @@ service 'bacula-director'
 
 case node['bacula']['database']
 when 'postgresql'
-  include_recipe "database::postgresql"
-  include_recipe "postgresql::server"
+  include_recipe 'database::postgresql'
+  include_recipe 'postgresql::server'
 
   db_connection = { host: 'localhost',
                     port: node['postgresql']['config']['port'],
                     username: 'postgres',
                     password: node['postgresql']['password']['postgres'] }
-
 
   postgresql_database_user 'bacula' do
     connection db_connection
@@ -53,13 +54,13 @@ when 'mysql'
                     username: 'root',
                     password: node['mysql']['server_root_password'] }
 
-  mysql_database "bacula" do
+  mysql_database 'bacula' do
     connection db_connection
     encoding 'utf8'
     collation 'utf8_unicode_ci'
   end
 
-  mysql_database_user "bacula" do
+  mysql_database_user 'bacula' do
     connection db_connection
     password node['bacula']['director']['db_password']
     database_name 'bacula'
@@ -99,7 +100,7 @@ else
   unmanagedhosts = []
 end
 
-_name = lambda { |sth| sth.respond_to?(:name) ? sth.name : sth['id'] }
+_name = ->(sth) { sth.respond_to?(:name) ? sth.name : sth['id'] }
 
 storages = search(:node, 'tags:bacula_storage')
 storages << node if tagged?('bacula_storage') && !storages.map(&_name).include?(node.name)
@@ -107,7 +108,7 @@ storages.sort_by!(&_name)
 
 clients = search(:node, 'tags:bacula_client')
 clients.concat unmanagedhosts
-clients << node if !clients.map(&_name).include?(node.name)
+clients << node unless clients.map(&_name).include?(node.name)
 clients.sort_by!(&_name)
 
 template '/etc/bacula/bacula-dir.conf' do
@@ -123,10 +124,10 @@ search('bacula_jobs', '*:*').each do |job|
   cfg_cookbook, cfg_template = config.split('::')
 
   clients = search(:node, "bacula_client_backup:#{job['id']}")
-  clients << node if !clients.map(&_name).include?(node.name)
-  unmanagedhosts.
-    select { |uh| Array(uh['bacula']['client']['backup']).include?(job['id']) }.
-    each { |uh| clients << uh }
+  clients << node unless clients.map(&_name).include?(node.name)
+  unmanagedhosts
+    .select { |uh| Array(uh['bacula']['client']['backup']).include?(job['id']) }
+    .each { |uh| clients << uh }
   clients.sort_by!(&_name)
 
   template "/etc/bacula/bacula-dir.d/job-#{job['id']}.conf" do

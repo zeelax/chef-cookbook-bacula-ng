@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 raise 'Need to run on bacula-dir node' unless tagged?('bacula_director')
 
 include_recipe 'php'

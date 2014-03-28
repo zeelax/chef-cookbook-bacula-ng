@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 include_recipe 'bacula-ng::_storage_pre'
 
 package "bacula-sd#{node['bacula']['package_flavour']}"
@@ -20,10 +22,12 @@ clients.sort_by(&:name)
 
 if directors.empty?
   Chef::Log.warn("Couldn't find Bacula director, using stub entry")
-  directors = [{'bacula' => { 'director' => {
-          'stub' => true,
-          'name' => 'dummy',
-          'password' => secure_password }}}]
+  directors = [{ 'bacula' =>
+                 { 'director' =>
+                   { 'stub' => true,
+                     'name' => 'dummy',
+                     'password' => secure_password } }
+              }]
 end
 
 template '/etc/bacula/bacula-sd.conf' do
@@ -31,13 +35,13 @@ template '/etc/bacula/bacula-sd.conf' do
   group 'bacula'
   mode '0640'
   variables :directors => directors
-  notifies :restart, "service[bacula-sd]"
+  notifies :restart, 'service[bacula-sd]'
 end
 
 if node['bacula']['use_iptables']
   include_recipe 'iptables'
   iptables_rule 'port_bacula_sd' do
-    variables :allowed_ips => (clients+directors).map { |n| node.ip_for(n) }.compact.uniq.sort
+    variables :allowed_ips => (clients + directors).map { |n| node.ip_for(n) }.compact.uniq.sort
   end
 end
 

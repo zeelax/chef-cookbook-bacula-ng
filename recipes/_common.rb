@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 include_recipe 'chef-solo-search' if Chef::Config[:solo]
 
 chef_gem 'chef-helpers' do

@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 include_recipe 'bacula-ng::_common'
 
 solo_require_attributes 'bacula.storage.password' do

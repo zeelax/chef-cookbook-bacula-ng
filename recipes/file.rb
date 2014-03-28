@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 include_recipe 'bacula-ng::_common'
 
 solo_require_attributes 'bacula.fd.password' do
@@ -21,10 +23,10 @@ template '/etc/bacula/bacula-fd.conf' do
   group 'bacula'
   mode '0640'
   variables :directors => directors
-  notifies :restart, "service[bacula-fd]"
+  notifies :restart, 'service[bacula-fd]'
 end
 
-# FIXME:DRY
+# FIXME: DRY
 node['bacula']['client']['backup'].map { |job_id| data_bag_item('bacula_jobs', job_id) }.each do |job|
   scripts = Array(job['backup_scripts'])
   directory "/etc/bacula/scripts/#{job['id']}" do

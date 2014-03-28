@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 module BaculaNG
   module Helpers
     def pg_has_table?(dbname, table)

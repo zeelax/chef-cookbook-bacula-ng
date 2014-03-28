@@ -2,7 +2,6 @@ default['bacula']['database'] = 'postgresql'
 default['bacula']['restore_dir'] = '/srv/bacula/restore'
 default['bacula']['use_iptables'] = true
 
-
 default['bacula']['storage']['name'] = "#{name}:storage"
 default['bacula']['storage']['directory'] = '/srv/bacula/storage'
 default['bacula']['storage']['maximum_concurrent_jobs'] = 20
