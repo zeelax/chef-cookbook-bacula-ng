@@ -57,8 +57,7 @@ end
 
 tag('bacula_client')
 
-if node['bacula']['use_iptables']
-  iptables_rule 'port_bacula_fd' do
-    variables :allowed_ips => directors.map { |n| node.ip_for(n) }.compact.uniq.sort
-  end
+iptables_rule 'port_bacula_fd' do
+  variables :allowed_ips => directors.map { |n| node.ip_for(n) }.compact.uniq.sort
+  only_if node['bacula']['use_iptables']
 end
