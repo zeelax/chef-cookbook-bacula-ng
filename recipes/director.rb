@@ -115,7 +115,7 @@ template '/etc/bacula/bacula-dir.conf' do
   owner 'root'
   group 'bacula'
   mode '0640'
-  variables :storages => storages, :clients => clients
+  variables storages: storages, clients: clients
   notifies :restart, 'service[bacula-director]'
 end
 
@@ -163,6 +163,6 @@ end
 if node['bacula']['use_iptables']
   include_recipe 'iptables'
   iptables_rule 'port_bacula_dir' do
-    variables :allowed_ips => storages.map { |n| node.ip_for(n) }.compact.uniq.sort
+    variables allowed_ips: storages.map { |n| node.ip_for(n) }.compact.uniq.sort
   end
 end

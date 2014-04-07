@@ -9,7 +9,7 @@ end
 
 directors = search(:node, 'tags:bacula_director')
 if node['$.bacula.director.password'].any? || tagged?('bacula_director') ||
-    (%w[bacula-ng::server bacula-ng::director] & node.run_list.expand(node.chef_environment).recipes).any?
+    (%w(bacula-ng::server bacula-ng::director) & node.run_list.expand(node.chef_environment).recipes).any?
   # I'm the director too
   directors << node unless directors.map(&:name).include?(node.name)
 end
@@ -22,7 +22,7 @@ template '/etc/bacula/bacula-fd.conf' do
   owner 'root'
   group 'bacula'
   mode '0640'
-  variables :directors => directors
+  variables directors: directors
   notifies :restart, 'service[bacula-fd]'
 end
 
@@ -60,6 +60,6 @@ end
 tag('bacula_client')
 
 iptables_rule 'port_bacula_fd' do
-  variables :allowed_ips => directors.map { |n| node.ip_for(n) }.compact.uniq.sort
+  variables allowed_ips: directors.map { |n| node.ip_for(n) }.compact.uniq.sort
   only_if node['bacula']['use_iptables']
 end

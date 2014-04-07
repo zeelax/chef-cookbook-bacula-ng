@@ -34,14 +34,14 @@ template '/etc/bacula/bacula-sd.conf' do
   owner 'root'
   group 'bacula'
   mode '0640'
-  variables :directors => directors
+  variables directors: directors
   notifies :restart, 'service[bacula-sd]'
 end
 
 if node['bacula']['use_iptables']
   include_recipe 'iptables'
   iptables_rule 'port_bacula_sd' do
-    variables :allowed_ips => (clients + directors).map { |n| node.ip_for(n) }.compact.uniq.sort
+    variables allowed_ips: (clients + directors).map { |n| node.ip_for(n) }.compact.uniq.sort
   end
 end
 

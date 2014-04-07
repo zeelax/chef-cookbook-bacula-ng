@@ -1,6 +1,9 @@
 AllCops:
-  Excludes:
+  Exclude:
     - tmp/**
+
+ClassAndModuleChildren:
+  Enabled: false
 
 Documentation:
   Enabled: false
@@ -8,11 +11,14 @@ Documentation:
 LineLength:
   Enabled: false
 
-ParenthesesAsGroupedExpression:
+MethodLength:
   Enabled: false
 
-HashSyntax:
+RescueModifier:
   Enabled: false
 
 SignalException:
+  Enabled: false
+
+SingleSpaceBeforeFirstArg:
   Enabled: false
