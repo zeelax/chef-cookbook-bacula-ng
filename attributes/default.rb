@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 default['bacula']['database'] = 'postgresql'
 default['bacula']['restore_dir'] = '/srv/bacula/restore'
 default['bacula']['use_iptables'] = true

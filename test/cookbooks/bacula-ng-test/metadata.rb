@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 name 'bacula-ng-test'
 description 'Integration tests for bacula-ng'
 

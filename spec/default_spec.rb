@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 require 'chefspec'
 
 describe 'bacula-ng::default' do
