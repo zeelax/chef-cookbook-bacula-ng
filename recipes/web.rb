@@ -14,7 +14,7 @@ include_recipe 'apache2::mod_ssl' if node['bacula']['web']['ssl_key_path']
 
 directory '/srv/bacula-web'
 
-tarball = "bacula-web-#{node['bacula']['web']['version']}.tar.gz"
+tarball = "bacula-web-#{node['bacula']['web']['version']}.tgz"
 tarball_path = "#{Chef::Config[:file_cache_path]}/#{tarball}"
 
 execute 'install bacula-web' do
