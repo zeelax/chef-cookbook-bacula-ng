@@ -55,10 +55,10 @@ in a single pass.
 
 ### Jobs
 
-Default configuration only includes two jobs: `BackupCatalog` to
-backup the Bacula's catalog data, and `RestoreFiles` to restore backed
-up files to the directory. It's up to user to add more specific jobs,
-tailored for their environment. The jobs are defined in `bacula_jobs`
+Default configuration only includes two jobs: `catalog` to
+backup the Bacula's catalog data, and `restore:files` to restore backed
+up files to the directory. It's up to the user to add more specific jobs,
+tailored for their environment. The jobs are defined in the `bacula_jobs`
 data bag. The data bag should contain following fields:
 
  - `id` -- obligatory data bag item ID

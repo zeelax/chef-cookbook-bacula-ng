@@ -1,6 +1,11 @@
 Change History
 ==============
 
+Unreleased
+-----
+ - update download url for bacula tarball
+ - refresh and (partially) fix tests
+
 0.2.0
 -----
  - add `exclude_files` attribute to job specs
