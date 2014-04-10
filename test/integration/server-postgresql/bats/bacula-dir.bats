@@ -33,9 +33,9 @@ load helpers/test_helper
 
 @test "can back up and restore" {
     rm -rf /srv/bacula/restore
-    echo "run job=BackupCatalog client=$MYHOSTNAME yes" | bconsole
+    echo "run job=catalog client=$MYHOSTNAME yes" | bconsole
     sleep 10                    # FIXME: actually wait
-    /etc/bacula/scripts/restore RestoreFiles fileset=Catalog client=$MYHOSTNAME current select all yes
+    /etc/bacula/scripts/restore restore:files fileset=Catalog client=$MYHOSTNAME current select all yes
     sleep 10                    # FIXME: actually wait
     [ -f /srv/bacula/restore/var/lib/bacula/bacula.sql ]
 }
