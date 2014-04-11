@@ -18,6 +18,9 @@ platforms:
 suites:
   - name: default
     run_list:
+      - recipe[apt]
+      - recipe[iptables]
+      - recipe[chef-solo-search]
       - recipe[bacula-ng-test]
       - recipe[bacula-ng]
     attributes:
@@ -28,13 +31,17 @@ suites:
           password: swordfish
   - name: server-postgresql
     run_list:
+      - recipe[apt]
+      - recipe[iptables]
+      - recipe[chef-solo-search]
       - recipe[bacula-ng-test]
       - recipe[bacula-ng::server]
       - recipe[bacula-ng::web]
     attributes:
       bacula:
         client:
-          backup: test_job
+          backup:
+            - test_job
         database: postgresql
         director:
           db_password: swordfish
@@ -50,6 +57,9 @@ suites:
           postgres: swordfish
   - name: server-mysql
     run_list:
+      - recipe[apt]
+      - recipe[iptables]
+      - recipe[chef-solo-search]
       - recipe[bacula-ng-test]
       - recipe[bacula-ng::server]
       - recipe[bacula-ng::web]
