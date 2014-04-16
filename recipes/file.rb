@@ -26,9 +26,9 @@ template '/etc/bacula/bacula-fd.conf' do
   notifies :restart, 'service[bacula-fd]'
 end
 
-%w(backup restore).each do |job|
-  node['bacula']['client'][job].map { |job_id| data_bag_item('bacula_jobs', job_id) }.each do |job|
-    scripts = Array(job["#{job}_scripts"])
+%w(backup restore).each do |job_name|
+  node['bacula']['client'][job_name].map { |job_id| data_bag_item('bacula_jobs', job_id) }.each do |job|
+    scripts = Array(job["#{job_name}_scripts"])
     directory "/etc/bacula/scripts/#{job['id']}" do
       not_if { scripts.empty? }
     end
